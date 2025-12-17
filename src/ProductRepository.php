@@ -56,4 +56,9 @@ class ProductRepository {
         $stmt->execute([':url' => $url]);
         return $stmt->fetchColumn() > 0;
     }
+    public function obtenerPorCategoria(int $categoriaId): array {
+        $stmt = $this->pdo->prepare("SELECT * FROM productos WHERE categoria_id = :cat");
+        $stmt->execute([':cat' => $categoriaId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
