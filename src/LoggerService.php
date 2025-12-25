@@ -1,24 +1,43 @@
 <?php
-
 namespace App;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Dotenv\Dotenv;
+use Monolog\Level; // <--- ESTO ES NUEVO EN MONOLOG 3
 
 class LoggerService {
-    private static $logger;
+    private $logger;
 
-    public static function getLogger(): Logger {
-        if (self::$logger === null) {
-            // Cargar configuración si es necesario (o usar ruta fija)
-            $logFile = dirname(__DIR__) . '/logs/app.log';
-            
-            // Crear canal de log
-            self::$logger = new Logger('CajaSorpresa');
-            // Le decimos que escriba en logs/app.log
-            self::$logger->pushHandler(new StreamHandler($logFile, Logger::INFO));
-        }
-        return self::$logger;
+    public function __construct($canal = 'caja_sorpresa') {
+        // 1. Definimos la ruta del archivo log
+        $logFile = dirname(__DIR__) . '/logs/app.log';
+
+        // 2. Creamos el canal
+        $this->logger = new Logger($canal);
+        
+        // 3. Configuramos el manejador
+        // IMPORTANTE: Usamos Level::Debug para registrar TODO (Info, Errores, Warnings...)
+        // Si usaras Logger::INFO aquí, te daría error en la versión nueva.
+        $this->logger->pushHandler(new StreamHandler($logFile, Level::Debug));
+    }
+
+    // Métodos ayudantes para no tener que llamar a getLogger() todo el rato
+    public function info($mensaje) {
+        $this->logger->info($mensaje);
+    }
+
+    public function error($mensaje) {
+        $this->logger->error($mensaje);
+    }
+    
+    public function warning($mensaje) {
+        $this->logger->warning($mensaje);
+    }
+    
+    // Si alguna vez necesitas el objeto logger original de Monolog
+    public function getMonologInstance() {
+        return $this->logger;
     }
 }

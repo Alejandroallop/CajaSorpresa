@@ -1,159 +1,186 @@
-/* RESET BÁSICO */
+/* =========================================
+   1. ESTRUCTURA PRINCIPAL (LAYOUT)
+   ========================================= */
 body {
     font-family: 'Poppins', sans-serif;
-    background: #1a1a2e; /* Fondo azul oscuro profundo */
+    background: #1a1a2e; /* Fondo azul oscuro */
     color: white;
-    text-align: center;
     margin: 0;
-    height: 100vh;
+    padding: 0;
+    
+    /* Flexbox para empujar el footer abajo */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Evita scrollbars molestos */
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa TODA la altura de la ventana */
 }
 
-/* CAJA PRINCIPAL DE LA APP */
+/* El MAIN ocupa el espacio libre entre Header y Footer */
+main {
+    flex: 1; 
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    padding: 20px;           /* Espacio para que no toque los bordes */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   2. HEADER (ENCABEZADO)
+   ========================================= */
+.main-header {
+    background-color: #16213e;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e94560;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.logo-container {
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    color: #e0e0e0;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover { color: #e94560; }
+
+.btn-admin-nav {
+    background: rgba(233, 69, 96, 0.2);
+    padding: 6px 12px;
+    border-radius: 15px;
+    border: 1px solid #e94560;
+}
+.btn-admin-nav:hover { background: #e94560; color: white; }
+
+/* =========================================
+   3. CAJA DE LA APLICACIÓN (GLASSMORPHISM)
+   ========================================= */
 .app-container {
-    background: rgba(255, 255, 255, 0.1); /* Efecto cristal */
+    background: rgba(255, 255, 255, 0.1); /* Cristal */
     backdrop-filter: blur(10px);
     padding: 2rem;
     border-radius: 20px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 450px; /* Tamaño controlado */
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.1);
+    
+    /* Asegura que no se salga en móviles */
+    box-sizing: border-box; 
+    margin: 20px auto;
 }
 
-/* SISTEMA DE PANTALLAS (Mostrar/Ocultar) */
+/* =========================================
+   4. ELEMENTOS DEL JUEGO
+   ========================================= */
 .pantalla { display: none; }
 .pantalla.activa { display: block; animation: fadeIn 0.5s; }
 .oculto { display: none !important; }
 
-/* BOTONES DE CATEGORÍA */
-.categorias { margin-bottom: 30px; }
+/* Botones Categorías */
+.categorias { margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
 .btn-cat {
-    padding: 12px 24px;
-    margin: 5px;
+    padding: 10px 20px;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    font-size: 1rem;
     font-weight: bold;
-    background: #e94560; /* Rojo rosado por defecto */
     color: white;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
 }
-.btn-cat:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); }
+.btn-cat:hover { transform: scale(1.05); }
 
-/* Colores específicos */
-.btn-cat.geek { background: #0f3460; } /* Azul oscuro */
-.btn-cat.hot { background: #ff2e63; }  /* Rosa neón */
+/* Colores */
+.btn-cat { background: #e94560; }
+.btn-cat.geek { background: #4ecca3; color: #16213e; } /* Ajustado para contraste */
+.btn-cat.hot { background: #ff2e63; }
 
-.sobre-animado {
-    font-size: 5rem;
-    animation: palpito 1.5s infinite;
-    cursor: pointer;
-}
+/* Sobre Animado */
+.sobre-animado { font-size: 4rem; animation: palpito 2s infinite; cursor: pointer; margin: 20px 0; }
 
-/* --- MAGIA 3D DE LA CARTA --- */
+/* Carta 3D */
 .escenario-carta {
-    perspective: 1000px; /* Profundidad 3D */
-    width: 250px;
-    height: 350px;
-    margin: 20px auto;
+    perspective: 1000px;
+    width: 220px;
+    height: 320px;
+    margin: 0 auto 20px auto;
 }
 
 .carta {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     position: relative;
-    transform-style: preserve-3d; /* Permite que los hijos giren en 3D */
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Rebote suave */
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
     cursor: pointer;
 }
-
-.carta.volteada {
-    transform: rotateY(180deg);
-}
+.carta.volteada { transform: rotateY(180deg); }
 
 .cara {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden; /* Oculta la cara trasera al girar */
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
-/* Parte Trasera (Interrogación) */
 .detras {
     background: linear-gradient(135deg, #16213e, #0f3460);
-    color: rgba(255,255,255,0.2);
-    font-size: 6rem;
-    transform: rotateY(0deg);
     border: 2px solid #e94560;
+    font-size: 5rem;
+    color: rgba(255,255,255,0.1);
 }
 
-/* Parte Delantera (Producto) */
 .frente {
-    background: white;
-    color: #333;
+    background: white; color: #333;
     transform: rotateY(180deg);
-    padding: 15px;
-    box-sizing: border-box;
+    padding: 10px;
 }
+.frente img { width: 90%; height: 160px; object-fit: contain; margin-bottom: 10px; }
+.precio { font-size: 1.4rem; color: #e94560; font-weight: bold; }
 
-.frente img {
-    width: 100%;
-    height: 180px;
-    object-fit: contain;
-    margin-bottom: 15px;
-}
+/* Grid Final */
+.grid-final { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 20px 0; }
+.grid-final img { width: 100%; aspect-ratio: 1; object-fit: contain; background: white; border-radius: 4px; }
 
-.frente h3 { font-size: 1rem; margin: 0 0 10px 0; }
-.precio { 
-    font-size: 1.5rem; 
-    color: #e94560; 
-    font-weight: bold; 
-    margin: 0;
-}
-
-/* GRID FINAL Y BOTÓN ACCIÓN */
-.grid-final {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin: 20px 0;
-}
-.grid-final img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
-}
-
+/* Botón Acción */
 .btn-accion {
-    background: #4ecca3;
-    color: #1a1a2e;
-    border: none;
-    padding: 10px 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+    background: #4ecca3; color: #1a1a2e;
+    border: none; padding: 12px 25px;
+    border-radius: 5px; font-weight: bold; font-size: 1rem;
+    cursor: pointer; margin-top: 10px;
 }
 
-/* ANIMACIONES */
-@keyframes palpito {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+/* =========================================
+   5. FOOTER (PIE DE PÁGINA)
+   ========================================= */
+.main-footer {
+    background-color: #0f3460;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
+.socials { margin-top: 10px; font-size: 1.2rem; }
+.socials a { color: white; margin: 0 10px; text-decoration: none; opacity: 0.6; }
+.socials a:hover { opacity: 1; }
+
+/* Animaciones */
+@keyframes palpito { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

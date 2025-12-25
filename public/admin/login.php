@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn-login">ENTRAR</button>
             </form>
             <br>
-            <a href="../index.html" style="color: #ccc; text-decoration: none;">← Volver a la web</a>
+            <a href="../index.php" style="color: #ccc; text-decoration: none;">← Volver a la web</a>
         </div>
     </div>
 </body>
